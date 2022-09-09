@@ -6,4 +6,9 @@ public abstract class PlayerBaseState : State
     {
         _player = player;
     }
+
+    protected void FaceTarget() {
+        _player.transform.LookAt(_player.Targeter.GetCurrentTarget().transform);
+    }
+
 }

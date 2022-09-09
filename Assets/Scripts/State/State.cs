@@ -1,10 +1,9 @@
 public abstract class State
 {
-    public abstract void Enter();
-
+    public string Name { get; protected set; }
+    public virtual void Enter() {}
 
     public abstract void Tick(float deltaTime);
 
-
-    public abstract void Exit();
+    public virtual void Exit() { }
 }

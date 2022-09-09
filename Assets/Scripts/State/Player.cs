@@ -1,15 +1,21 @@
 using UnityEngine;
+using BurgerBoy;
 
 public class Player : StateMachine
 {
+    // Components
     public PlayerInput Input { get; private set; }
 
     private CharacterController _characterController;
 
-    private Animator _animator;
+    public Animator Animator { get; private set; }
 
+    public Targeter Targeter { get; private set; }
+
+    // Camera Access
     private Transform _mainCameraTransform;
 
+    // Knobs
     [SerializeField]
     private float _runSpeed = 10f;
 
@@ -19,34 +25,50 @@ public class Player : StateMachine
     [SerializeField]
     private float _animationDampTime = 25f;
 
+    private float _currentGravity = 0f;
+
+
     private void Awake() {
         Input = GetComponent<PlayerInput>();
 
         _characterController = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
+
+        Animator = GetComponent<Animator>();
+        Targeter = GetComponentInChildren<Targeter>();
+
         _mainCameraTransform = Camera.main.transform;
     }
 
     private void Start() {
+        _globalState = new PlayerGlobalState(this);
         SwitchState(new PlayerFreeLookState(this));
     }
 
-    public void Move(float deltaTime) {
+    public void ApplyGravity() {
+        if (_characterController.isGrounded) {
+            _currentGravity = 0;
+        } else {
+            _currentGravity += Constants.GRAVITY;
+            _characterController.Move(new Vector3(0, _currentGravity, 0) * Time.deltaTime);
+        }
+    }
+
+    public void Move() {
         bool isMoving = Input.MovementVector != Vector2.zero;
 
         if (isMoving) {
-            PerformMovement(deltaTime);
+            PerformMovement();
         }
 
-        BlendAnimation(isMoving, deltaTime);
+        BlendMovementAnimation(isMoving);
     }
 
-    private void PerformMovement(float deltaTime) {
+    private void PerformMovement() {
             Vector3 movement = CalculateMovement();
 
-            _characterController.Move(movement * deltaTime * _runSpeed);
+            _characterController.Move(movement * Time.deltaTime * _runSpeed);
 
-        FaceMovementDirection(movement, deltaTime);
+        FaceMovementDirection(movement);
     }
 
     private Vector3 CalculateMovement() {
@@ -62,16 +84,16 @@ public class Player : StateMachine
         return cameraForward * Input.MovementVector.y + cameraRight * Input.MovementVector.x;
     }
 
-    private void FaceMovementDirection(Vector3 movement, float deltaTime) {
+    private void FaceMovementDirection(Vector3 movement) {
         transform.rotation = Quaternion.Lerp(
            transform.rotation,
            Quaternion.LookRotation(movement),
-           deltaTime * _faceDampening
+           Time.deltaTime * _faceDampening
         );
-
     }
 
-    private void BlendAnimation(bool isMoving, float deltaTime) {
-        _animator.SetFloat("IdleRunBlend", isMoving ? 1 : 0, _animationDampTime, deltaTime);
+    private void BlendMovementAnimation(bool isMoving) {
+        Animator.SetFloat("IdleRunBlend", isMoving ? 1 : 0, _animationDampTime, Time.deltaTime);
     }
+
 }

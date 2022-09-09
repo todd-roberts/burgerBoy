@@ -7,6 +7,8 @@ public class PlayerInput : MonoBehaviour, PlayerControls.IPlayerActions
 {
     public event Action JumpEvent;
     public event Action DodgeEvent;
+    public event Action TargetingEvent;
+    public event Action CancelEvent;
 
     public Vector2 MovementVector { get; private set; }
     private PlayerControls _controls;
@@ -43,4 +45,17 @@ public class PlayerInput : MonoBehaviour, PlayerControls.IPlayerActions
         }
     }
 
+    public void OnTarget(InputAction.CallbackContext context)
+    {
+        if (context.performed) {
+            TargetingEvent?.Invoke();
+        }
+    }
+
+    public void OnCancel(InputAction.CallbackContext context)
+    {
+        if (context.performed) {
+            CancelEvent?.Invoke();
+        }
+    }
 }
