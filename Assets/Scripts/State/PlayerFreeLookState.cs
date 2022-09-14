@@ -7,9 +7,9 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Enter()
     {
-        _player.Input.TargetingEvent += this.OnTarget;
+        // _player.Input.TargetingEvent += this.OnTarget;
 
-        _player.Animator.Play("FreeLookBlendTree");
+        _player.Animator.CrossFadeInFixedTime("FreeLookBlendTree", .1f);
     }
 
     public override void Tick(float deltaTime)
@@ -24,7 +24,7 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Exit()
     {
-        _player.Input.TargetingEvent -= this.OnTarget;
+        // _player.Input.TargetingEvent -= this.OnTarget;
     }
 
     private void OnTarget()

@@ -1,5 +1,7 @@
 public class PlayerTargetingState : PlayerBaseState
 {
+    public bool previouslyEntered = false;
+
     public PlayerTargetingState(Player player) : base(player)
     {
         Name = "PlayerTargetingState";
@@ -10,14 +12,26 @@ public class PlayerTargetingState : PlayerBaseState
         _player.Input.TargetingEvent += this.OnTarget;
         _player.Input.CancelEvent += this.OnCancel;
 
-        if (!_player.Targeter.HasTargets())
+        if (ShouldAbortEntry())
         {
             OnCancel();
-            return;
-        };
+        }
+        else
+        {
+            _player.Animator.Play("TargetingBlendTree");
+            _player.Targeter.TargetInitial();
+            previouslyEntered = true;
+        }
 
-        _player.Animator.Play("TargetingBlendTree");
-        _player.Targeter.TargetInitial();
+    }
+
+    private bool ShouldAbortEntry()
+    {
+        bool noTargetsAvailable = !_player.Targeter.HasTargets();
+
+        bool destroyedTargetedEnemy = previouslyEntered && !_player.Targeter.HasValidTarget();
+
+        return noTargetsAvailable || destroyedTargetedEnemy;
     }
 
     public override void Tick(float deltaTime)

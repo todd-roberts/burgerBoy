@@ -31,7 +31,7 @@ public class PlayerAttackingState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
-        FaceTarget();
+        //FaceTarget();
 
         if (AttackHasEnded())
         {
