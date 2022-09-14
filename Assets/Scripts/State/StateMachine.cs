@@ -2,7 +2,8 @@ using UnityEngine;
 
 public abstract class StateMachine : MonoBehaviour
 {
-    private State _currentState;
+    protected State _previousState;
+    protected State _currentState;
     protected State _globalState;
 
     void Update()
@@ -18,10 +19,17 @@ public abstract class StateMachine : MonoBehaviour
         } else {
             Debug.Log($"Switching states: {_currentState.Name} -> {state.Name}");
             _currentState.Exit();
+            _previousState = _currentState;
         }
 
         _currentState = state;
 
         _currentState.Enter();
+    }
+
+    public void RewindState() {
+        if (_previousState != null) {
+            SwitchState(_previousState);
+        }
     }
 }

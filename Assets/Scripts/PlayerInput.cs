@@ -1,5 +1,4 @@
 using System;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +8,7 @@ public class PlayerInput : MonoBehaviour, PlayerControls.IPlayerActions
     public event Action DodgeEvent;
     public event Action TargetingEvent;
     public event Action CancelEvent;
+    public bool IsAttacking { get; private set; }
 
     public Vector2 MovementVector { get; private set; }
     private PlayerControls _controls;
@@ -20,7 +20,7 @@ public class PlayerInput : MonoBehaviour, PlayerControls.IPlayerActions
     }
 
     private void OnDestroy(){
-        _controls.Player.Disable();
+        _controls?.Player.Disable();
     }
 
     public void OnLook(InputAction.CallbackContext context){}
@@ -56,6 +56,15 @@ public class PlayerInput : MonoBehaviour, PlayerControls.IPlayerActions
     {
         if (context.performed) {
             CancelEvent?.Invoke();
+        }
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed) {
+            IsAttacking = true;
+        } else if (context.canceled) {
+            IsAttacking = false;
         }
     }
 }
