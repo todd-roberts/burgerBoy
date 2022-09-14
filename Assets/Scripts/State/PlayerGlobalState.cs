@@ -1,6 +1,6 @@
 public class PlayerGlobalState : PlayerBaseState
 {
-    public PlayerGlobalState(Player player): base(player)
+    public PlayerGlobalState(Player player) : base(player)
     {
         Name = "PlayerGlobalState";
     }

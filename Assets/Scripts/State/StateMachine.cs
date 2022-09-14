@@ -14,9 +14,12 @@ public abstract class StateMachine : MonoBehaviour
 
     public void SwitchState(State state)
     {
-        if (_currentState == null) {
+        if (_currentState == null)
+        {
             Debug.Log($"Switching to state {state.Name}");
-        } else {
+        }
+        else
+        {
             Debug.Log($"Switching states: {_currentState.Name} -> {state.Name}");
             _currentState.Exit();
             _previousState = _currentState;
@@ -27,8 +30,10 @@ public abstract class StateMachine : MonoBehaviour
         _currentState.Enter();
     }
 
-    public void RewindState() {
-        if (_previousState != null) {
+    public void RewindState()
+    {
+        if (_previousState != null)
+        {
             SwitchState(_previousState);
         }
     }

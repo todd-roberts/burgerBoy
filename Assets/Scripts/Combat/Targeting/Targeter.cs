@@ -33,15 +33,7 @@ public class Targeter : MonoBehaviour
     {
         Target target = other.GetComponent<Target>();
 
-        if (target != null)
-        {
-            _possibleTargets.Remove(target);
-
-            if (target == _currentTarget)
-            {
-                ClearTarget();
-            }
-        }
+        if (target != null) RemoveTarget(target);
     }
 
     public Target GetCurrentTarget() => _currentTarget;
@@ -90,4 +82,14 @@ public class Targeter : MonoBehaviour
     public bool HasTargets() => _possibleTargets.Count > 0;
 
     public bool HasValidTarget() => _currentTarget != null;
+
+    public void RemoveTarget(Target target)
+    {
+        if (target == _currentTarget)
+        {
+            ClearTarget();
+        }
+
+        _possibleTargets.Remove(target);
+    }
 }

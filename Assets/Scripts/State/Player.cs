@@ -17,17 +17,6 @@ public class Player : StateMachine
 
     public AudioSource Audio { get; private set; }
 
-    [SerializeField]
-    private Attack[] _attacks;
-
-    public Attack CurrentAttack { get; private set; }
-
-    // Audio Clips
-
-    public AudioClip basicAttackClip;
-
-    public AudioClip powerAttackClip;
-
     // Camera Access
     private Transform _mainCameraTransform;
 
@@ -44,7 +33,14 @@ public class Player : StateMachine
     [SerializeField]
     private float _animationDampTime = .1f;
 
+    // Forces
     private float _currentGravity = 0f;
+
+    // Attacking
+    [SerializeField]
+    private Attack[] _attacks;
+
+    public Attack CurrentAttack { get; private set; }
 
     private Vector3 impact = Vector3.zero;
 
@@ -60,7 +56,6 @@ public class Player : StateMachine
         Targeter = GetComponentInChildren<Targeter>();
 
         _mainCameraTransform = Camera.main.transform;
-
     }
 
     private void Start()
@@ -144,6 +139,7 @@ public class Player : StateMachine
         CurrentAttack = _attacks.FirstOrDefault(attack => attack.Name == attackName);
 
         Audio.clip = CurrentAttack.AudioClip;
+
         Audio.PlayDelayed(CurrentAttack.AudioDelay);
 
         Animator.Play(CurrentAttack.Animation.ToString(), 0, 0);

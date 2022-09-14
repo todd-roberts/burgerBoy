@@ -13,57 +13,72 @@ public class PlayerInput : MonoBehaviour, PlayerControls.IPlayerActions
     public Vector2 MovementVector { get; private set; }
     private PlayerControls _controls;
 
-    private void Start() {
+    private void Start()
+    {
         _controls = new PlayerControls();
         _controls.Player.SetCallbacks(this);
         _controls.Player.Enable();
     }
 
-    private void OnDestroy(){
+    private void OnDestroy()
+    {
         _controls?.Player.Disable();
     }
 
-    public void OnLook(InputAction.CallbackContext context){}
+    public void OnLook(InputAction.CallbackContext context) { }
 
-    public void OnMove(InputAction.CallbackContext context) {
-        if (context.performed) {
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
             MovementVector = context.ReadValue<Vector2>();
-        } else {
+        }
+        else
+        {
             MovementVector = new Vector2(0, 0);
         }
     }
 
-    public void OnJump(InputAction.CallbackContext context) {
-        if (context.performed) {
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
             JumpEvent?.Invoke();
         }
     }
 
-    public void OnDodge(InputAction.CallbackContext context) {
-        if (context.performed) {
+    public void OnDodge(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
             DodgeEvent?.Invoke();
         }
     }
 
     public void OnTarget(InputAction.CallbackContext context)
     {
-        if (context.performed) {
+        if (context.performed)
+        {
             TargetingEvent?.Invoke();
         }
     }
 
     public void OnCancel(InputAction.CallbackContext context)
     {
-        if (context.performed) {
+        if (context.performed)
+        {
             CancelEvent?.Invoke();
         }
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.performed) {
+        if (context.performed)
+        {
             IsAttacking = true;
-        } else if (context.canceled) {
+        }
+        else if (context.canceled)
+        {
             IsAttacking = false;
         }
     }

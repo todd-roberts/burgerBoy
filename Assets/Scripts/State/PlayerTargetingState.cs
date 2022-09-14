@@ -1,8 +1,7 @@
-using UnityEngine;
-
 public class PlayerTargetingState : PlayerBaseState
 {
-    public PlayerTargetingState(Player player): base(player){
+    public PlayerTargetingState(Player player) : base(player)
+    {
         Name = "PlayerTargetingState";
     }
 
@@ -10,26 +9,35 @@ public class PlayerTargetingState : PlayerBaseState
     {
         _player.Input.TargetingEvent += this.OnTarget;
         _player.Input.CancelEvent += this.OnCancel;
-        
+
+        if (!_player.Targeter.HasTargets())
+        {
+            OnCancel();
+            return;
+        };
+
         _player.Animator.Play("TargetingBlendTree");
         _player.Targeter.TargetInitial();
     }
 
     public override void Tick(float deltaTime)
     {
-        if (!_player.Targeter.HasValidTarget()) {
+        if (!_player.Targeter.HasValidTarget())
+        {
             OnCancel();
             return;
         }
 
-        if (_player.Input.IsAttacking) {
+        if (_player.Input.IsAttacking)
+        {
             _player.SwitchState(new PlayerAttackingState(_player));
-            return;
         }
+        else
+        {
+            _player.Move();
 
-        _player.Move();
-
-        FaceTarget();
+            FaceTarget();
+        }
     }
 
     public override void Exit()

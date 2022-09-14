@@ -1,9 +1,10 @@
 public class PlayerFreeLookState : PlayerBaseState
 {
-    public PlayerFreeLookState(Player player) : base(player){
+    public PlayerFreeLookState(Player player) : base(player)
+    {
         Name = "PlayerFreeLookState";
     }
-    
+
     public override void Enter()
     {
         _player.Input.TargetingEvent += this.OnTarget;
@@ -15,8 +16,9 @@ public class PlayerFreeLookState : PlayerBaseState
     {
         _player.Move();
 
-        if (_player.Input.IsAttacking) {
-             _player.SwitchState(new PlayerAttackingState(_player));
+        if (_player.Input.IsAttacking)
+        {
+            _player.SwitchState(new PlayerAttackingState(_player));
         }
     }
 
@@ -27,9 +29,10 @@ public class PlayerFreeLookState : PlayerBaseState
 
     private void OnTarget()
     {
-        if (_player.Targeter.HasTargets()) {
+        if (_player.Targeter.HasTargets())
+        {
             _player.SwitchState(new PlayerTargetingState(_player));
         }
     }
-  
+
 }
