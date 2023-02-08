@@ -16,6 +16,7 @@ public class EnemyDeath : MonoBehaviour
     {
         PlayDeathSound();
         _particleSystem.Play();
+        //todo: destroy death object?
     }
 
     private void PlayDeathSound()

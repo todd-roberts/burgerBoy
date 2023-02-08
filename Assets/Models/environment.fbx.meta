@@ -1,20 +1,26 @@
 fileFormatVersion: 2
-guid: 4fa8867e6a5322c4f8aae4d7cce9992e
+guid: d20317dbca1096a40b8afa8b52f07e81
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
   - first:
-      74: 153040481788004560
-    second: GroundQuad.001|BigTreeAction
-  - first:
-      74: -2045601481953592935
-    second: GroundQuad.001|GroundQuad.001Action
-  - first:
       74: -4281543461301557725
     second: BigTree|BigTreeAction
   - first:
-      74: 6885525437688294082
-    second: BigTree|GroundQuad.001Action
+      74: -956164287532327646
+    second: BigTree|Spatula|0TPose|0TPose
+  - first:
+      74: 3886260297747176664
+    second: BigTree|Spatula|Idle|Idle
+  - first:
+      74: 4712354941195273422
+    second: BigTree|Spatula|Jump|Jump
+  - first:
+      74: -6701616527921147020
+    second: BigTree|Spatula|Run|Run
+  - first:
+      74: 7706300769550213673
+    second: BigTree|Spatula|Swing|Swing
   externalObjects: {}
   materials:
     materialImportMode: 2

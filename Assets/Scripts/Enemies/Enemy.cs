@@ -1,15 +1,31 @@
 using UnityEngine;
+using BurgerBoy;
+using System.Collections;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : StateMachine
 {
+    public Character Character;
+
+    public Detection Detection;
+
+    public CharacterController CharacterController;
+
+
     public GameObject ItemDropPrefab;
+
+    [SerializeField]
+    private float itemDropChance = 0.5f;
+
+    [SerializeField]
+    private float itemDropYOffset = 2f;
     public GameObject DamageTextPrefab;
 
-    private EnemyDeath _death;
-    private Player _player;
-    private AudioSource _audioSource;
+    [SerializeField]
+    private float _stunDuration = 1f;
 
-    private Animator _animator;
+    private EnemyDeath _death;
+    protected Player _player;
+    protected AudioSource _audioSource;
 
     private Target _target;
 
@@ -27,12 +43,14 @@ public class Enemy : MonoBehaviour
     public int maxHealth;
     private int _currentHealth { get; set; }
 
+    private float _currentGravity = 0f;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
         _target = GetComponent<Target>();
+
+        CharacterController = GetComponent<CharacterController>();
 
         _death = GetComponentInChildren<EnemyDeath>();
         _death.gameObject.SetActive(false);
@@ -44,12 +62,22 @@ public class Enemy : MonoBehaviour
     {
         _targeter = FindObjectOfType<Targeter>();
         _player = FindObjectOfType<Player>();
+
+        _globalState = new EnemyGlobalState(this);
+
+        SwitchState(new EnemyIdleState(this));
     }
+
+    public Vector3 GetPlayerPosition() => _player.transform.position;
+
+    public abstract EnemyBaseState GetDetectPlayerState();
 
     public void ReceiveAttack(Attack attack)
     {
-        PlayDamageAnimation();
+        SwitchState(new EnemyDamagedState(this));
+
         PlayDamageSound(attack);
+
         DisplayDamage(attack.BaseDamage);
 
         _currentHealth -= attack.BaseDamage;
@@ -60,10 +88,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void PlayDamageAnimation()
-    {
-        _animator.Play("Damage");
-    }
+    public float GetStunDuration() => _stunDuration;
 
     private void PlayDamageSound(Attack attack)
     {
@@ -95,15 +120,25 @@ public class Enemy : MonoBehaviour
         _death.transform.parent = transform.parent;
         _death.Perform();
 
+        if (ItemDropPrefab != null && Random.Range(0f, 1f) <= itemDropChance)
+        {
+            Instantiate(ItemDropPrefab, transform.position + Vector3.up * itemDropYOffset, Quaternion.identity, transform.parent);
+        }
+
         Object.Destroy(gameObject);
     }
 
-
-    void Update()
+    public void ApplyGravity()
     {
-        Vector3 lookVector = transform.position - _player.transform.position;
-        lookVector.y = 0f;
-
-        transform.rotation = Quaternion.LookRotation(lookVector * -1);
+        if (CharacterController.isGrounded)
+        {
+            _currentGravity = 0;
+        }
+        else
+        {
+            _currentGravity += Constants.GRAVITY;
+            CharacterController.Move(new Vector3(0, _currentGravity, 0) * Time.deltaTime);
+        }
     }
+
 }
